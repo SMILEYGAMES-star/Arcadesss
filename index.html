@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARCADE DO BASTOS</title>
+<meta name="description" content="Meus jogos, minhas ideias e um pouco de caos. Escolha sua próxima aventura.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕹️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07060f; --panel:#100d22; --panel2:#17122f;
+  --blue:#2de2ff; --purple:#9b5cff; --pink:#ff3ea5;
+  --text:#ecebff; --muted:#a29fc4;
+  --display:'Chakra Petch',Impact,sans-serif;
+  --body:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.6;min-height:100vh;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+/* Fundo: grade em perspectiva + brilhos */
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;background:
+  radial-gradient(60% 50% at 15% 0%,rgba(155,92,255,.28),transparent 70%),
+  radial-gradient(50% 45% at 90% 20%,rgba(255,62,165,.18),transparent 70%),
+  radial-gradient(60% 50% at 50% 100%,rgba(45,226,255,.16),transparent 70%),var(--bg)}
+.grid{position:absolute;left:-50%;right:-50%;bottom:-10%;height:65%;
+  background-image:linear-gradient(rgba(45,226,255,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(155,92,255,.35) 1px,transparent 1px);
+  background-size:56px 56px;transform:perspective(420px) rotateX(62deg);transform-origin:center bottom;
+  -webkit-mask-image:linear-gradient(to top,#000,transparent 85%);mask-image:linear-gradient(to top,#000,transparent 85%);
+  animation:flow 6s linear infinite}
+@keyframes flow{to{background-position:0 56px}}
+.scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)}
+
+.wrap{width:min(1120px,100% - 32px);margin-inline:auto}
+
+/* Topo */
+.top{padding:22px 0;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{font-family:var(--display);font-weight:700;letter-spacing:.14em;font-size:.95rem;display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo i{width:12px;height:12px;background:var(--pink);box-shadow:0 0 14px var(--pink);transform:rotate(45deg)}
+.nav{display:flex;gap:6px}
+.nav a{font-size:.9rem;text-decoration:none;color:var(--muted);padding:8px 14px;border-radius:99px;border:1px solid transparent;transition:.25s}
+.nav a:hover{color:var(--text);border-color:rgba(155,92,255,.6);box-shadow:0 0 16px rgba(155,92,255,.35)}
+
+/* Hero */
+.hero{text-align:center;padding:48px 0 40px}
+h1{font-family:var(--display);font-weight:700;line-height:.95;font-size:clamp(2.6rem,10.5vw,6.6rem);letter-spacing:.02em;
+  background:linear-gradient(100deg,var(--blue),var(--purple) 50%,var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 24px rgba(155,92,255,.55));animation:boot 1.1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes boot{0%{opacity:0;letter-spacing:.35em;filter:blur(10px)}100%{opacity:1;letter-spacing:.02em;filter:drop-shadow(0 0 24px rgba(155,92,255,.55))}}
+.hero p{margin:22px auto 0;max-width:34ch;font-size:clamp(1.05rem,2.6vw,1.35rem);color:var(--muted)}
+
+/* Lançamento */
+.launch{position:relative;margin:24px 0 70px;border-radius:26px;padding:3px;
+  background:conic-gradient(from var(--a,0deg),var(--pink),var(--purple),var(--blue),var(--purple),var(--pink));animation:spin 6s linear infinite;
+  box-shadow:0 0 60px rgba(255,62,165,.35),0 0 120px rgba(155,92,255,.25)}
+@property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes spin{to{--a:360deg}}
+.banner{position:absolute;top:-18px;left:50%;transform:translateX(-50%) rotate(-2deg);z-index:2;white-space:nowrap;
+  font-family:var(--display);font-weight:700;font-size:clamp(1.2rem,4.5vw,2rem);letter-spacing:.18em;padding:8px 30px;color:#fff;
+  background:linear-gradient(90deg,var(--pink),var(--purple));border-radius:6px;box-shadow:0 0 28px var(--pink);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 50px var(--pink),0 0 12px #fff inset}}
+.launch-in{border-radius:23px;background:linear-gradient(160deg,#1a1038,#0d0a1f 70%);padding:56px clamp(20px,5vw,56px) 40px;
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:clamp(20px,4vw,48px);align-items:center;cursor:pointer}
+.bike-art{aspect-ratio:1;max-width:340px;width:100%;margin-inline:auto;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle,rgba(255,62,165,.3),transparent 65%);position:relative}
+.bike-art svg{width:86%;filter:drop-shadow(0 0 14px var(--pink)) drop-shadow(0 0 30px var(--purple));animation:float 3.4s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-10px) rotate(-2deg)}}
+.tag{display:inline-block;font-size:.8rem;font-weight:600;padding:4px 12px;border-radius:99px;border:1px solid var(--blue);color:var(--blue);margin-bottom:12px}
+h2.title{font-family:var(--display);font-size:clamp(1.9rem,5.4vw,3.4rem);line-height:1.02;margin-bottom:16px}
+.launch p{color:var(--muted);font-size:1.05rem;max-width:52ch}
+.launch p+p{margin-top:10px}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+
+/* Botões */
+.btn{font-family:var(--display);font-weight:700;font-size:1rem;letter-spacing:.08em;text-decoration:none;cursor:pointer;border:0;color:#fff;
+  padding:14px 26px;border-radius:12px;display:inline-flex;align-items:center;gap:10px;transition:transform .2s,box-shadow .2s;
+  background:linear-gradient(90deg,var(--pink),var(--purple));box-shadow:0 0 22px rgba(255,62,165,.45)}
+.btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 0 38px rgba(255,62,165,.8)}
+.btn.ghost{background:transparent;border:1.5px solid var(--blue);color:var(--blue);box-shadow:0 0 14px rgba(45,226,255,.25)}
+.btn.ghost:hover{box-shadow:0 0 30px rgba(45,226,255,.6);background:rgba(45,226,255,.08)}
+.soon{display:inline-block;font-family:var(--display);padding:14px 22px;border-radius:12px;border:1.5px dashed var(--purple);color:var(--muted)}
+.hidden{display:none!important}
+
+/* Catálogo */
+.sec-title{font-family:var(--display);font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:.06em;margin-bottom:6px}
+.sec-sub{color:var(--muted);margin-bottom:28px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;padding-bottom:80px}
+.card{position:relative;text-align:left;font:inherit;color:inherit;cursor:pointer;background:linear-gradient(170deg,var(--panel2),var(--panel));
+  border:1px solid rgba(155,92,255,.3);border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:12px;overflow:hidden;
+  transition:transform .3s,border-color .3s,box-shadow .3s;transform-style:preserve-3d}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(260px circle at var(--mx,50%) var(--my,0%),rgba(45,226,255,.18),transparent 60%);opacity:0;transition:opacity .3s}
+.card:hover,.card:focus-visible{border-color:var(--blue);box-shadow:0 0 34px rgba(45,226,255,.3);transform:translateY(-8px)}
+.card:hover::before{opacity:1}
+.card .ico{font-size:3.2rem;line-height:1;filter:drop-shadow(0 0 14px rgba(155,92,255,.8))}
+.card h3{font-family:var(--display);font-size:1.45rem;letter-spacing:.04em}
+.card p{color:var(--muted);font-size:.97rem;flex:1}
+.card .go{font-family:var(--display);font-weight:700;color:var(--blue);letter-spacing:.08em}
+.dev{align-self:flex-start;font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:99px;background:rgba(255,184,0,.12);color:#ffcf4d;border:1px solid rgba(255,207,77,.4)}
+
+/* Modal */
+.modal{position:fixed;inset:0;z-index:50;display:none;place-items:center;padding:16px;background:rgba(4,3,12,.82);backdrop-filter:blur(8px)}
+.modal.open{display:grid}
+.dialog{position:relative;width:min(520px,100%);max-height:92vh;overflow:auto;border-radius:24px;padding:36px 30px 30px;text-align:center;
+  background:linear-gradient(170deg,var(--panel2),var(--panel));border:1.5px solid var(--purple);box-shadow:0 0 70px rgba(155,92,255,.5);animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes pop{from{opacity:0;transform:scale(.88) translateY(20px)}}
+.dialog .ico{font-size:4.4rem;filter:drop-shadow(0 0 20px var(--pink))}
+.dialog h3{font-family:var(--display);font-size:1.9rem;margin:8px 0 12px}
+.dialog p{color:var(--muted);margin-bottom:14px}
+.dialog .actions{justify-content:center}
+.x{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--text);font-size:1.3rem;cursor:pointer;transition:.2s}
+.x:hover{border-color:var(--pink);box-shadow:0 0 16px var(--pink)}
+
+/* Página do APK */
+#bike-page{display:none;padding-bottom:80px}
+body.on-bike #home{display:none}
+body.on-bike #bike-page{display:block}
+.bp-hero{position:relative;border-radius:26px;padding:3px;margin-top:28px;background:linear-gradient(135deg,var(--pink),var(--purple),var(--blue));box-shadow:0 0 70px rgba(255,62,165,.35)}
+.bp-in{border-radius:23px;background:linear-gradient(160deg,#1a1038,#0d0a1f 70%);padding:48px clamp(20px,5vw,56px);text-align:center}
+.bp-in .bike-art{max-width:260px;margin-bottom:10px}
+.bp-in p{max-width:60ch;margin:0 auto 12px;color:var(--muted);font-size:1.08rem}
+.bp-in .actions{justify-content:center}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:24px}
+.info div{background:var(--panel);border:1px solid rgba(155,92,255,.3);border-radius:16px;padding:18px}
+.info b{display:block;font-family:var(--display);color:var(--blue);margin-bottom:4px}
+.info span{color:var(--muted);font-size:.95rem}
+.back{margin-top:6px}
+
+footer{text-align:center;color:var(--muted);font-size:.9rem;padding:30px 16px 40px;border-top:1px solid rgba(155,92,255,.2)}
+
+@media (max-width:760px){
+  .launch-in{grid-template-columns:1fr;text-align:center;padding-top:48px}
+  .launch p{margin-inline:auto}
+  .actions{justify-content:center}
+  .bike-art{max-width:230px}
+  .nav a{padding:8px 10px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><div class="grid"></div><div class="scan"></div></div>
+
+<!-- Ícone de bicicleta reutilizável -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="bike" viewBox="0 0 200 130">
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="5">
+      <circle cx="42" cy="86" r="30" stroke="#2de2ff"/>
+      <circle cx="158" cy="86" r="30" stroke="#2de2ff"/>
+      <path d="M42 86 L84 86 L66 44 M84 86 L128 44 L66 44 M128 44 L158 86" stroke="#ff3ea5"/>
+      <path d="M128 44 L120 28 L138 28 M60 36 L74 36" stroke="#9b5cff"/>
+      <circle cx="84" cy="86" r="6" stroke="#ff3ea5"/>
+    </g>
+  </symbol>
+</svg>
+
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="#home" data-home><i></i>ARCADE DO BASTOS</a>
+    <nav class="nav">
+      <a href="#lancamento" data-home>Lançamento</a>
+      <a href="#catalogo" data-home>Catálogo</a>
+    </nav>
+  </header>
+
+  <!-- HOME -->
+  <main id="home">
+    <section class="hero">
+      <h1>ARCADE<br>DO BASTOS</h1>
+      <p>Meus jogos, minhas ideias e um pouco de caos. Escolha sua próxima aventura.</p>
+    </section>
+
+    <section id="lancamento" aria-label="Lançamento">
+      <div class="launch">
+        <div class="banner">LANÇAMENTO!</div>
+        <div class="launch-in" id="launch-card" tabindex="0" role="link" aria-label="Abrir página de ROUBE A BIKE DO IGOR">
+          <div class="bike-art"><svg><use href="#bike"/></svg></div>
+          <div>
+            <span class="tag">🤖 APK para Android · em desenvolvimento</span>
+            <h2 class="title">ROUBE A BIKE DO IGOR</h2>
+            <p>Surgiu como uma piada, virou jogo! Ainda em desenvolvimento.</p>
+            <p>Roube a bike de Igor, venda, ganhe dinheiro, evolua, contrate minions e crie um império de bikes roubadas do Igor... coitado dele...</p>
+            <div class="actions">
+              <a class="btn apk-link hidden" data-apk download>⬇ BAIXAR APK</a>
+              <span class="soon apk-soon hidden">APK disponível em breve</span>
+              <button class="btn ghost" data-open-bike type="button">VER PÁGINA DO JOGO</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="catalogo">
+      <h2 class="sec-title">CATÁLOGO DE JOGOS</h2>
+      <p class="sec-sub">Toque em um card para ver os detalhes e jogar.</p>
+      <div class="cards" id="cards"></div>
+    </section>
+  </main>
+
+  <!-- PÁGINA EXCLUSIVA DO APK -->
+  <main id="bike-page">
+    <button class="btn ghost back" type="button" data-home>← VOLTAR AO CATÁLOGO</button>
+    <div class="bp-hero">
+      <div class="banner">LANÇAMENTO!</div>
+      <div class="bp-in">
+        <div class="bike-art"><svg><use href="#bike"/></svg></div>
+        <span class="tag">🤖 Android · em desenvolvimento</span>
+        <h2 class="title">ROUBE A BIKE DO IGOR</h2>
+        <p>Surgiu como uma piada, virou jogo! Ainda em desenvolvimento.</p>
+        <p>Roube a bike de Igor, venda, ganhe dinheiro, evolua, contrate minions e crie um império de bikes roubadas do Igor... coitado dele...</p>
+        <div class="actions">
+          <a class="btn apk-link hidden" data-apk download>⬇ BAIXAR APK</a>
+          <span class="soon apk-soon hidden">APK disponível em breve</span>
+        </div>
+      </div>
+    </div>
+    <div class="info">
+      <div><b>🚲 Roube</b><span>Pegue a bike do Igor.</span></div>
+      <div><b>💰 Venda</b><span>Transforme bikes em dinheiro.</span></div>
+      <div><b>⚙️ Evolua</b><span>Melhore seu esquema.</span></div>
+      <div><b>👾 Contrate minions</b><span>Crie um império de bikes roubadas.</span></div>
+    </div>
+    <div class="info">
+      <div><b>Como instalar</b><span>Baixe o APK, abra o arquivo no celular e permita a instalação de fontes desconhecidas, se o Android pedir.</span></div>
+      <div><b>Aviso</b><span>Jogo em desenvolvimento: pode ter bugs.</span></div>
+    </div>
+  </main>
+</div>
+
+<footer>ARCADE DO BASTOS · feito com ideias e um pouco de caos</footer>
+
+<!-- Modal de jogo -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+  <div class="dialog">
+    <button class="x" type="button" id="m-close" aria-label="Fechar">✕</button>
+    <div class="ico" id="m-ico"></div>
+    <h3 id="m-title"></h3>
+    <p id="m-desc"></p>
+    <span class="dev" id="m-dev">⚠ Em desenvolvimento, pode apresentar bugs</span>
+    <div class="actions" style="margin-top:22px">
+      <a class="btn" id="m-play" target="_blank" rel="noopener">JOGAR AGORA</a>
+      <button class="btn ghost" type="button" id="m-back">VOLTAR AO CATÁLOGO</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== CONFIGURAÇÃO =====
+   O APK fica na mesma pasta do index.html (ex.: no repositório do GitHub Pages).
+   Se mudar o nome do arquivo ou hospedar em outro endereço, edite apenas esta linha.
+   Deixe "" para mostrar "APK disponível em breve". */
+const APK_URL = "Roube_a_Bike_do_Igor.apk";
+
+const GAMES = [
+  { name:"PIZZA RUSH", icon:"🍕",
+    url:"https://miguelbastosdeaguiar30-hash.github.io/PIZZA-RUSH/",
+    desc:"Você é um entregador de pizza, mas você é muito rápido e não tem muito tempo para entregar as pizzas... Cuidado com as cascas de banana!" },
+  { name:"ZUMGUELIKE", icon:"🧟",
+    url:"https://miguelbastosdeaguiar30-hash.github.io/Zumguelike/",
+    desc:"Jogo 2D de zumbi com mecânicas roguelike, uma morte já era, fique forte e enfrente os bosses." },
+  { name:"ZUMGUELIKE ONLINE", icon:"🌐",
+    url:"https://miguelbastosdeaguiar30-hash.github.io/zumguelike-online/",
+    desc:"O mesmo Zumguelike! Mas on-line! Muitos bugs e travamentos, por enquanto é isso.", bugs:true }
+];
+
+const $ = (s, r=document) => r.querySelector(s);
+const modal = $('#modal');
+let lastFocus = null;
+
+/* Cards do catálogo */
+const cards = $('#cards');
+GAMES.forEach((g, i) => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'card';
+  b.innerHTML = `<span class="ico">${g.icon}</span><h3>${g.name}</h3><p>${g.desc}</p>
+    <span class="dev">⚠ Em desenvolvimento, pode ter bugs</span><span class="go">VER JOGO</span>`;
+  b.addEventListener('click', () => openGame(i));
+  b.addEventListener('pointermove', e => {
+    const r = b.getBoundingClientRect();
+    b.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    b.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  });
+  cards.appendChild(b);
+});
+
+/* Modal */
+function openGame(i){
+  const g = GAMES[i];
+  lastFocus = document.activeElement;
+  $('#m-ico').textContent = g.icon;
+  $('#m-title').textContent = g.name;
+  $('#m-desc').textContent = g.desc;
+  $('#m-play').href = g.url;
+  modal.classList.add('open');
+  $('#m-close').focus();
+}
+function closeModal(){ modal.classList.remove('open'); if (lastFocus) lastFocus.focus(); }
+$('#m-close').onclick = closeModal;
+$('#m-back').onclick = closeModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* Navegação entre catálogo e página do APK */
+function route(){
+  const onBike = location.hash === '#roube-a-bike-do-igor';
+  document.body.classList.toggle('on-bike', onBike);
+  if (onBike) window.scrollTo({top:0});
+}
+function goHome(target){
+  document.body.classList.remove('on-bike');
+  history.replaceState(null, '', target || '#catalogo');
+  const el = document.querySelector(target || '#catalogo');
+  if (el) el.scrollIntoView({behavior:'smooth'}); else window.scrollTo({top:0});
+}
+function openBike(){ location.hash = 'roube-a-bike-do-igor'; }
+
+document.querySelectorAll('[data-home]').forEach(el => el.addEventListener('click', e => {
+  e.preventDefault();
+  const h = el.getAttribute('href');
+  goHome(h && h.startsWith('#') && h !== '#home' ? h : (el.classList.contains('back') ? '#catalogo' : '#home'));
+}));
+document.querySelectorAll('[data-open-bike]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); openBike(); }));
+const lc = $('#launch-card');
+lc.addEventListener('click', e => { if (!e.target.closest('a,button')) openBike(); });
+lc.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target === lc) openBike(); });
+window.addEventListener('hashchange', route);
+route();
+
+/* Download do APK */
+function showApk(ok){
+  document.querySelectorAll('.apk-link').forEach(a => a.classList.toggle('hidden', !ok));
+  document.querySelectorAll('.apk-soon').forEach(s => s.classList.toggle('hidden', ok));
+}
+document.querySelectorAll('[data-apk]').forEach(a => {
+  a.addEventListener('click', e => e.stopPropagation());
+});
+(async function initApk(){
+  if (!APK_URL) return showApk(false);
+  document.querySelectorAll('[data-apk]').forEach(a => {
+    a.href = APK_URL;
+    a.setAttribute('download', APK_URL.split('/').pop() || 'Roube_a_Bike_do_Igor.apk');
+  });
+  // Em servidor (GitHub Pages), confirma se o arquivo existe; localmente, mostra o botão.
+  if (location.protocol.startsWith('http')) {
+    try {
+      const r = await fetch(APK_URL, { method:'HEAD', cache:'no-store' });
+      showApk(r.ok);
+    } catch (err) { showApk(true); }
+  } else showApk(true);
+})();
+</script>
+</body>
+</html>
